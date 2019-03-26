@@ -93,7 +93,26 @@ public class Main {
             }
         }
         
-        printResults();
+        ////////////////////////////////////////////////////////////////
+        //TODO -- needs to be fixed
+        //program still works without
+        for(String currentVideo: foundVids) {
+        	//System.out.println(currentVideo);
+        	for(int i = 0; i < possibilities.size(); i++) {
+        		String p = Integer.toString(possibilities.get(i));
+        		if(!(currentVideo == p)) { //WHEN NOT TRUE
+        			//add video to not found
+        			System.out.println("IN IF");
+        			System.out.println("possibility: " + possibilities.get(i));
+        			notFoundVids.add(Integer.toString(possibilities.get(i)));
+        		} 
+        	}
+        }
+        System.out.println("FoundVids: " + foundVids.size());
+        System.out.println("notFoundVids: " + notFoundVids.size());
+        System.out.println("possibilities: " + possibilities.size());
+        ////////////////////////////////////////////////////////////////
+        //printResults();
 
 	}
 	
@@ -215,18 +234,6 @@ public class Main {
         
         System.out.println("----------------------------------------------------------------");
         
-        ////////////////////////////////////////////////////////////////
-        //TODO -- needs to be fixed
-        //program still works without
-        for(String currentVideo: foundVids) {
-        	for(int i = 0; i < possibilities.size(); i++) {
-        		if(!(possibilities.get(i) == Integer.parseInt(currentVideo))){
-        			//continue;
-        			notFoundVids.add(possibilities.get(i) + "");
-        		}
-        	}
-        }
-        ////////////////////////////////////////////////////////////////
 	}
 	
 	
