@@ -93,22 +93,6 @@ public class Main {
             }
         }
         
-        ////////////////////////////////////////////////////////////////
-        //TODO -- needs to be fixed
-        //program still works without
-        for(String currentVideo: foundVids) {
-        	for(int i = 0; i < possibilities.size(); i++) {
-        		if(!(possibilities.get(i) == Integer.parseInt(currentVideo))){
-        			//continue;
-        			notFoundVids.add(possibilities.get(i) + "");
-        		}
-        	}
-        }
-        ////////////////////////////////////////////////////////////////
-        System.out.println(foundVids.size());
-        System.out.println(notFoundVids.size());
-        
-        
         printResults();
 
 	}
@@ -230,6 +214,20 @@ public class Main {
         	System.out.println("Possibility: " + notFoundVids.get(i) + " NOT Found");
         
         System.out.println("----------------------------------------------------------------");
+        
+        ////////////////////////////////////////////////////////////////
+        //TODO -- needs to be fixed
+        //program still works without
+        for(String currentVideo: foundVids) {
+        	for(int i = 0; i < possibilities.size(); i++) {
+        		if(!(possibilities.get(i) == Integer.parseInt(currentVideo))){
+        			//continue;
+        			notFoundVids.add(possibilities.get(i) + "");
+        		}
+        	}
+        }
+        ////////////////////////////////////////////////////////////////
 	}
+	
 	
 }
