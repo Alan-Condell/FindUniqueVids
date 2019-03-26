@@ -225,7 +225,7 @@ public class Main {
 	private static void printResults() {
 
         System.out.println("----------------------------------------------------------------");
-        System.out.println(notFoundVids.size() + " of the 720 possibilities were found.\nThey include:");
+        System.out.println(notFoundVids.size() + " of the 720 possibilities were not found.\nThey include:");
         
         for(int i = 0; i < notFoundVids.size();  i++)
         	System.out.println("Possibility- " + notFoundVids.get(i) + " NOT Found");
