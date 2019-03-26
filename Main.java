@@ -49,71 +49,74 @@ public class Main {
 		
 		genCombos();
 		
+		// Checks if the videosDir and selectedVideoDir already exists.
+		// if not - creates them
 		try {
 			if(!(videosDir.exists()))
 				videosDir.mkdir();
+			
 			if(!(selectedVideoDir.exists()))
 				selectedVideoDir.mkdir();
+			
 		}catch(Exception e) {
 			System.out.println("Error: Could not find C: drive on PC");
 		}
-		
-		System.out.println("Please make sure videos are located in: " + videosDir.getAbsolutePath() +
+		System.out.println("This program can be used to search for a video for each combination of dog positions in a 6 trap race.\r\n" + 
+				"Video files must be in the following format -- TTT_YYYY_MM_DD_RN_PPPPPP\r\n" + 
+				"Where: \r\n" + 
+				"           TTT    = Track Code      -> LMK\r\n" + 
+				" 	   YYYY   = Year            -> 2019\r\n" + 
+				" 	   MM     = Month           -> 01\r\n" + 
+				" 	   DD     = Day             -> 21\r\n" + 
+				" 	   RR     = Race Number     -> 02\r\n" + 
+				" 	   PPPPPP = Dog placements  -> 421365\r\n");
+		System.out.println("----------------------------------------------------------------");
+		System.out.println("\nPlease make sure videos are located in " + videosDir.getAbsolutePath() +
+						   "\nOR you have changed the Directories to the appropriate ones (see Doc for more details)" +
 				           "\nPress ENTER to start.");
+		
+		// Waits for enter to be pressed
+		try{
+			System.in.read();
+			
+		} catch(Exception e){
+			System.out.print(e);
+		}
+		System.out.println("----------------------------------------------------------------");
 		
 		String[] vidPaths = videosDir.list();
 		String[] splitVid = new String[6];
 		
-		try{
-			System.in.read();
-		} catch(Exception e){
-			System.out.print(e);
-		}
-			
+		// for each path in vidPaths
         for (String path : vidPaths) {
+        	
         	//if path does not contains selectedVideos
         	if(!(path.contains("SelectedVideos"))) {
         		splitVid = path.split("_");
         	
         		String pos = splitVid[5];
-        		//gets rid of ".*" from the placements string
         		String [] posAndExtension = pos.split("\\.");
 
         		pos = posAndExtension[0];
         		
-        		for(int i = 0; i < possibilities.size(); i++) {
-        			if(possibilities.contains(Integer.parseInt(pos))) {
-        				addToSelectedVideos(path, pos);
-        				break;
-        			} else {
-        			      errorInDogPlacements.add(path);
-        				  break;
-        			}
+        		// if possibilities contains pos
+        		if(possibilities.contains(Integer.parseInt(pos))) {
+        			addToSelectedVideos(path, pos);
+        		} else {
+        			errorInDogPlacements.add(path);
         		}
             }
         }
         
-        ////////////////////////////////////////////////////////////////
-        //TODO -- needs to be fixed
-        //program still works without
-        for(String currentVideo: foundVids) {
-        	//System.out.println(currentVideo);
-        	for(int i = 0; i < possibilities.size(); i++) {
-        		String p = Integer.toString(possibilities.get(i));
-        		if(!(currentVideo == p)) { //WHEN NOT TRUE
-        			//add video to not found
-        			System.out.println("IN IF");
-        			System.out.println("possibility: " + possibilities.get(i));
-        			notFoundVids.add(Integer.toString(possibilities.get(i)));
-        		} 
-        	}
+        for(int i = 0; i < possibilities.size(); i++) {
+        	String p = Integer.toString(possibilities.get(i));
+        	
+        	//if foundVids does NOT contains p
+        	if(!(foundVids.contains(p)))
+        		notFoundVids.add(p); 
         }
-        System.out.println("FoundVids: " + foundVids.size());
-        System.out.println("notFoundVids: " + notFoundVids.size());
-        System.out.println("possibilities: " + possibilities.size());
-        ////////////////////////////////////////////////////////////////
-        //printResults();
 
+        printResults();
 	}
 	
 	//generate all possible combinations of races using 1 2 3 4 5 6.
@@ -121,13 +124,12 @@ public class Main {
 		/**
 		 * genCombos
 		 * 
-		 * @param ArrayList<String> temp	-- Temporary ArrayList that stores each number as a string
 		 * @param int start                 -- Starting number
 		 * @param int end                   -- Ending number
 		 * @param String num                -- Stores a number between start and end
 		 */
 		
-		ArrayList<String> temp = new ArrayList<String>();
+		//ArrayList<String> temp = new ArrayList<String>();
 		
 		int start  = 123456;
 		int end    = 654321;
@@ -136,26 +138,23 @@ public class Main {
 		for(int i = start; i <= end; i++) {
 			String num = Integer.toString(i);
 
-			//if i has 0, 7, 8, 9 in any pos, dont add.
+			//if i has 0, 7, 8, 9 in any position, don't add.
 			if(!(num.contains("0") || num.contains("7") || num.contains("8") || num.contains("9"))) {
 				
-					//goes through each index in num, and sees if the number at that index is repeated.
-					for(int j = 0; j < num.length(); j++) {
-						if(isUnique(num)) {
-							temp.add(num);
-							break;
-						}
+				//goes through each index in num, and sees if the number at that index is repeated.
+				for(int j = 0; j < num.length(); j++) {
+					
+					// if num has full unique digits 
+					if(isUnique(num)) {
+						possibilities.add(Integer.parseInt((num)));
+						break;
 					}
+				}
 			}
 		}
-		
-		Collections.sort(temp);
-
-		for(int i = 0; i < temp.size(); i++) {
-			possibilities.add(Integer.parseInt(temp.get(i)));
-		}
-
+		Collections.sort(possibilities);
 	}
+	
 	//checks generated number to see if it has any recurring digits.
 	private static boolean isUnique(String num) {
 		/**
@@ -190,9 +189,10 @@ public class Main {
 		try{
 			File video = new File("C:\\Videos\\" + path);
 			
-//			if pos is not duplicate
+		    //if pos is NOT duplicate
 	    	if(!(duplicate(pos))) {
-	    		//if video is added to selectedVideos
+	    		
+	    		//if video is 'renamed' and added to selectedVideos
 	    		if(video.renameTo(new File("C:\\Videos\\SelectedVideos\\" + path))){
 	    			System.out.println("File: " + path + " was moved");
 	    			foundVids.add(pos);
@@ -223,17 +223,20 @@ public class Main {
 	}
 	
 	private static void printResults() {
-		
-		System.out.println("----------------------------------------------------------------");
+
+        System.out.println("----------------------------------------------------------------");
+        System.out.println(notFoundVids.size() + " of the 720 possibilities were found.\nThey include:");
+        
+        for(int i = 0; i < notFoundVids.size();  i++)
+        	System.out.println("Possibility- " + notFoundVids.get(i) + " NOT Found");
+        
+        System.out.println("----------------------------------------------------------------");
+        
         for(int i = 0; i < errorInDogPlacements.size(); i++) {
         	System.out.println("ERROR: Dog placements are incorrect.\nPlease make sure " + errorInDogPlacements.get(i) + " is named correctly");
         }
-        System.out.println("----------------------------------------------------------------");
-        for(int i = 0; i < notFoundVids.size();  i++)
-        	System.out.println("Possibility: " + notFoundVids.get(i) + " NOT Found");
         
         System.out.println("----------------------------------------------------------------");
-        
 	}
 	
 	
